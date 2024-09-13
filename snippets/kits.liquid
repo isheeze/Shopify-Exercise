@@ -1,0 +1,43 @@
+<form class="kits-container">
+  {% for v in product.variants %}
+    <input type="radio" id="kit-variant-{{ v.id }}" name="kit-variant" value="{{ v.id }}" {% if forloop.index0 == 0 %}checked{% endif %}/>
+    <label class="gradient-bg" for="kit-variant-{{ v.id }}">
+      <div class="single-kit-container">
+        <div class="kit-header">
+          <h2>{{ v.title }}</h2>
+          <div class="kit-prices">
+            <div class="diagonal-strike">{{ v.metafields.custom.old_price.value | money }}</div>
+            <div>{{ v.price | money }}</div>
+          </div>
+        </div>
+        
+        <div class="kit-tag">{{ v.metafields.custom.tag.value }}</div>
+        <div>
+          <ul>
+            {% for p in v.metafields.custom.points.value %}
+            <li><img src="{{ "list-icon.png" | file_url }}"/>{{ p }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div>{{ v.metafields.custom.description | metafield_tag }}</div>
+      </div>
+    </label>
+  {% endfor %}
+</form>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const updateVariant = () => {
+    const selectedVariant = document.querySelector('.kits-container [name="kit-variant"]:checked')
+    selectedVariant.closest('.product__info-container').querySelector('product-form input[name="id"]').value = selectedVariant.value
+    console.log(selectedVariant.closest('.product__info-container').querySelector('product-form input[name="id"]').value)
+    console.log(selectedVariant.value)
+  }
+  updateVariant()
+
+  const radios = document.querySelectorAll('.kits-container input')
+  console.log(radios)
+  radios.forEach(radio => {
+    radio.addEventListener('change', updateVariant)
+});
+})
+</script>
